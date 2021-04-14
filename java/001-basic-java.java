@@ -57,7 +57,31 @@ elem.select("td:nth-child(3)").text()
 
 
 
+// list or array to string
 
+  public <T> String toStr(T[] array)
+    {
+        if (array == null) return "[]";
 
+        return toStr(Arrays.asList(array));
+    }
 
+    public <T> String toStr(Iterable<T> ite)
+    {
+        String s = "[";
+
+        if(ite!=null) {
+            var it = ite.iterator();
+
+            while (it.hasNext()) {
+                if (s != "[") s += ",";
+                s += it.next();
+            }
+        }
+
+        s += "]";
+
+        return s;
+
+    }
 
