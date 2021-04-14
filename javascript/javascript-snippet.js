@@ -6,7 +6,7 @@ $( function () {
 $(document).ready(function(){
 });
 
-//click even
+//click event
 $("#id").click(function(){
 	//do something
 })
@@ -29,7 +29,7 @@ document.getElementsByClassName("a1")[0].checked  //array member
 $("input:checkbox:checked").val()
 $('#checkbox-id').prop('checked')
 $('#checkbox-id').is(':checked')
-$("#checkbox-id")get(0).checked
+$("#checkbox-id").get(0).checked
 
 var val = $("#checkAll").val();// 获取指定id的复选框的值
   var isSelected = $("#checkAll").attr("checked"); // 判断id=checkAll的那个复选框是否处于选中状态，选中则isSelected=true;否则isSelected=false;  //jquery1.6之后版本，用prop()判断。应该写成 isSelected = $("#checkAll").prop("checked");
