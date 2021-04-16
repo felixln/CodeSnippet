@@ -1,7 +1,7 @@
 
 $.noConflict(boolean);
 
-#Immediately-Invoked Function Expression, IIFE(Á¢¼´µ÷ÓÃº¯Êı±í´ïÊ½)
+#Immediately-Invoked Function Expression, IIFE(ç«‹å³è°ƒç”¨å‡½æ•°è¡¨è¾¾å¼)
 (function($) {
 	//statement
 })(jQuery);
