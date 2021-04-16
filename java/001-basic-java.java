@@ -248,3 +248,127 @@ RandomAccessFile (implements DataInput/DataOutput)
 
     }
 
+============= Exception ====================
+java.lang.Throwable 
+Error, Exception
+---- printStackTrace(), getMessage()
+
+Error: VirtualMachineError, OutOfMemoryError, StackOverflowError
+
+Exception: IOException, SQLException, RuntimeException
+
+RuntimeException: NullPointerException, NumberFormatException,IllegalStateException, IllegalArgumentException, ClassCastException, IndexOutOfBoundsException, StringIndexOutOfBoundsException, ArrayIndexOutOfBoundsException
+
+checked/unchecked exception
+
+catch, throw, finally, try-with-resources, throws
+
+try ( var in = new FileInputStream(); var out = new FileOutputStream();)
+{
+}
+catch (Exception1 | Exception2 e) // merge condiction
+{
+	e.printStackTrace();
+} finally {}
+
+===========================================
+
+if( i instanceof Integer) {}
+
+var i = Integer.valueOf(100) // boxing primitive 100, cache
+var j = i.intValue()  // unboxing
+var k = new Integer(100) // create new object for each call, Deprecated
+parseXXX  // string to int
+Integer.parseInt("1234", 16) // hex
+MIN_VALUE, MAX_VALUE, TRUE, FALSE, POSITIVE_INFINITY, NEGATIVE_INFINITY, NaN
+Number.byte/short/int/long/float/doubleVaue()
+
+Integer.reverse, reverseBytes, rotateLeft, rotateRight, valueOf, IntergeCache
+
+Character 《Java编程的逻辑.2018》page 149
+BMP( Basic Multilingual Plane ) 0x0000~0xFFFF, 2 bytes (1 char)
+supplementary character 0x10000~0x10FFFF, 增补字符 4 bytes(2 chars) (2 high surrogate 0xD800~0xDBFF + 2 low surrogate 0xDC00~0xDFFF)
+code point （unicode ordinal ), code unit (char)
+
+String
+split(String regex)
+matches(String regex)
+replaceFirst/All( String regex, String replacement )
++, += // convert to StringBuilder.append()
+
+StringBuffer // thread safe
+StringBuilder // thread unsafe 
+
+
+Arrays
+copyOf(), asList(), sort(), binarySearch(), fill(), 
+
+int [][] arr = new int [2][];
+int [0] = new int [3];
+int [1] = new int [4];
+
+static deepToString(), deepEquals(), deepHashCode()
+
+org.apache.commons.lang3.ArrayUtils
+
+
+System
+static arraycopy()
+
+Math.random() // return double 0~1
+
+java.util.Random
+nextLong/Int/Bytes/Double/Float/Boolean()
+10+int(5*Math.random())  // 10~15
+
+final
+modify class, not allow inheritance. Math, System
+modify method(public/protected), not allow to override.
+modify data member, can only assign value once
+
+super(parameter list)
+
+this
+call constructor: this(parameter list)
+
+package/import
+
+static import
+import static java.util.Arrays.*;
+import static java.lang.System.out;
+
+//可见性
+private < default(package) < protected (package+sub class) < public
+
+jar -cvf <package name>.jar  top-most-package-name
+
+==========================================
+
+@override
+
+interface/class
+implements, extends, instanceof, 
+
+Integer.class, i.getClass().
+
+anonymous class 
+
+
+============= Enum ===============
+java.lang.Enum
+public enum Size { SMALL, MEDIUM, LARGE }
+
+Size size = Size.SMALL;
+var size = Size.valueOf("SMALL");
+
+size.toString()
+size.name()
+size.ordinal() // compareTo
+static values()
+
+for( Size size: Size.values() ) {
+	System.out.println( size );
+}
+
+
+
