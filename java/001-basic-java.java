@@ -372,3 +372,78 @@ for( Size size: Size.values() ) {
 
 
 
+============= DateTime =======================
+
+Concept:
+Epoch Time (纪元时)：1970-01-01 00:00:00 (GMT+0)  // Unix Time
+TimeZone: China Beijing GMT+8:00
+Instant: a milli-seconds of long format base on the Epoch Time. Positvie value if > epoch time, else negative value. 
+
+Calendar: Gregorian Calendar, Chinese Lunar Calendar, or other calendar, looks like a view or perspective base on the Instant.
+
+------- Old Java DateTime class---------
+Date: sometime base on Epoch Time 1970-01-01 00:00:00 (GMT+0),  sometime base on the delta of 1900(year), so confused.
+---- private transient long fastTime // milli seconds from  Epoch Time 1970-01-01 00:00:00 (GMT+0)
+---- fastTime = System.currentTimeMillis() by default
+
+TimeZone
+---- getDefault(), 
+---- getID() // Asia/Shanghai
+---- getTimeZone( "US/Eastern" ),
+---- getTimeZone( "GMT+8:00" )
+System.getProperty("user.timezone")  // check default timezone
+java -Duser.timezone=Asia/Shanghai  // set JVM parameter
+
+Locale // country/district & language
+---- getDefault()
+---- toString() // zh_CN
+
+Calendar/ GregorianCalendar
+---- getInstance(TimeZone, Locale)
+---- getInstance() // default TimeZone and default Locale
+---- setTime(Date)
+---- setTimeMillis(Long)
+
+DateFormat
+---- format()  // date to string
+---- parse()    // string to date
+---- getDateTimeInstance(), getDateInstance(), getTimeInstance()  // factory
+
+SimpleDateFormat // thread unsafe
+---- SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒")
+---- parse(), format();
+
+
+
+------- Joda-Time ---------------------
+
+
+------- Java new DateTime for JDK8+ ---------------------
+Instant
+Instant now = Instant.now();
+Instant now = Instant.ofEpochMilli( System.currentTimeMillis() );
+
+LocalDateTime
+--- getYear/MonthValue/DayOfMonth/Hour/Minute/Second()
+
+LocalDate
+LocalTime
+
+ZoneId/ ZoneOffset
+
+ZoneDateTime
+
+DateTimeFormatter // thread safe
+var formatter = new DateTimeFormatter.ofPattern("yyyy-MM-dd HH:ss:mm")
+
+ChronoField
+
+Temporal / TemporalAdjuster
+
+Period  // day diff
+// calc age from birthday
+Period.between( birthday, LocalDate.now()).getYears();
+
+Duration // time diff
+// calc delay minutes
+Duration.between( fromLocalTime, to LocalTime ).toMinutes();
