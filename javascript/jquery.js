@@ -85,7 +85,7 @@ E[C1][C2] chain attributes
 // form filter
 
 :checkbox  // input[type=checkbox]
-:checked    // checkbox, radio, select/option
+:checked    // check boxes or radio buttons that are checked
 :disabled
 :enabled
 :file
@@ -95,7 +95,7 @@ E[C1][C2] chain attributes
 :password
 :radio
 :reset  // input[type=reset], button[type=reset]
-:selected // option
+:selected // Selects option elements that are selected.
 :submit 
 :text   // input[type=text] or default input
 
@@ -103,10 +103,10 @@ input:checkbox:check
 input:checkbox:not(:checked)
 
 // content filters
-:contains(text)
+:contains(foo) elements containing the text foo.
 :empty   // no child elements or text
 :has( selector )
-:parent  // contains any child elements or text
+:parent  // elements that have children (including text),
 
 // other filters
 :not( selector )
@@ -116,7 +116,7 @@ input:checkbox:not(:checked)
 :lang( language )
 :root
 :target
-:visible
+:visible  // Selects only elements that are visible.
 
 
 

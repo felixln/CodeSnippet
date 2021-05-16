@@ -349,6 +349,8 @@ jar -cvf <package name>.jar  top-most-package-name
 interface/class
 implements, extends, instanceof, 
 
+if ( a instanceof A) {}
+
 Integer.class, i.getClass().
 
 anonymous class 
