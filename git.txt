@@ -1,4 +1,4 @@
-��or create a new repository on the command line
+…or create a new repository on the command line
 
 echo "# CodeSnippet" >> README.md
 
@@ -10,12 +10,1007 @@ git remote add origin https://github.com/felixln/CodeSnippet.git
 git push -u origin main
 
 
-��or push an existing repository from the command line
+…or push an existing repository from the command line
 
 git remote add origin https://github.com/felixln/CodeSnippet.git
 git branch -M main
 git push -u origin main
 
 
-��or import code from another repository
+…or import code from another repository
 You can initialize this repository with code from a Subversion, Mercurial, or TFS project.
+
+
+工作区、版本库和暂存区
+工作区：就是你在电脑里能看到的目录，比如我的learngit文件夹就是一个工作区。
+版本库：工作区有一个隐藏目录.git，这个不算工作区，而是Git的版本库。
+暂存区：Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。
+我们把文件往Git版本库里添加的时候，是分两步执行的：
+
+第一步是用git add把文件添加进去，实际上就是把文件修改添加到暂存区；
+第二步是用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支。
+因为我们创建Git版本库时，Git自动为我们创建了唯一一个master分支，所以,现在git commit就是往master分支上提交更改。
+
+简单理解:需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。
+
+详细知识见工作区和暂存区和Git 基础 - 记录每次更新到仓库
+
+本地库和远程库
+新建仓库
+建立远程库(为空，不要加README.md，不然后面会push不上去)
+本地新建文件夹
+git init初始化仓库，可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的。勿人为瞎改
+远程库的名字就是origin，这是Git默认的叫法
+git remote add origin git@github.com:michaelliao/learngit.git 这个命令是在本地的learngit仓库下执行的。这两个地方的仓库名不需要相同，因为会通过在本地的仓库目录下执行这条命令（命令中包含远程库的名字）已经将两者建立了联系
+git push -u origin master 把本地库的所有内容推送到远程库上。把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。由于远程库是空的，我们第一次推送master分支时，加上了-u参数(推送和关联)，Git不但会把本地的master分支内容推送到远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。
+git push origin master每次本地提交后,推送最新修改到远程库
+从远程库克隆
+假设github上面已经有一个远程库，但是本地没有，需要克隆到本地，远程库的名字叫gitskills
+
+git clone git@github.com:michaelliao/gitskills.git 克隆一个本地库,则在当前文件夹下会多一个gitskills的文件夹。
+cd gitskills进入克隆下来的本地库，默认的名字是和github上的一样的
+git push origin master 推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git就会把该分支推送到远程库对应的远程分支上
+常用查看指令
+git status 查看仓库当前的状态
+git diff 文件名查看对文件做什么修改
+git diff 版本号1 版本号2 --stat查看两个版本的差异的文件列表，包括被修改行数和增删图。参数改为--name-status前面显示修改说明字母(A,M等)，无行数
+git log显示从最近到最远的提交日志
+git log --pretty=oneline 简化日志输出的显示信息，commit id很长,详细显示见这里
+git reflog 记录你的每一次命令，最先显示的是这个命令执行之后的版本的版本号的前七位，这样就算你清屏了或者重启了，也能找到某个版本的版本号，就可以轻松回退到那个版本
+git branch 查看当前所在的分支。git branch命令会列出所有分支，当前分支前面会标一个*号
+git log --graph --pretty=oneline --abbrev-commit用带参数的git log可以看到分支的合并情况。用git log --graph命令可以看到分支合并图
+git remote 查看远程库的信息
+git remote -v 显示更为详细的信息
+常用修改指令
+git add readme.txt添加，但是不提交
+git commit -m "提交描述"提交，只有add后提交才有效。“改文件->add文件->再改->提交”，则第二次修改无效,不会被提交，只会成功提交第一次的修改。
+撤销修改和版本回退
+git checkout -- 文件名把没暂存(即没add)的干掉，或者说，丢弃工作区，回到到暂存状态
+git reset HEAD 文件名把暂存的状态取消，工作区内容不变，但状态变为“未暂存”。
+简单来说，没有add过的修改，只需要git checkout -- 文件名即可撤销；add 过的修改，先git reset HEAD 文件名变成没add 过的修改，再git checkout -- 文件名撤销。操作示例可以看这张图
+
+git reset --hard HEAD^ 会回退到上一个版本
+git reset --hard 某版本号前几位通过命令行上的历史信息（假如你没清屏的话），找到某版本 的版本号回到指定版本。不一定要全部的版本号，就像这个命令的例子，只要前面的约7、8位这样就可以。
+分支管理
+创建和合并分支
+git checkout -b dev创建一个新的分支：dev，并且会切换到dev分支。所以这条命令有两个作用。git checkout命令加上-b参数表示创建并切换，相当于以下两条命令：git branch dev和git checkout dev
+git branch dev，新建分支是新建指针,指向当前commit
+git checkout dev切换到dev分支
+git checkout masterdev分支的工作完成，我们就可以切换回master分支(此时在dev分支的修改在master上是看不到的)
+git merge dev 这是在master分支上执行的命令，作用是：把dev分支上的工作成果合并到master分支上
+git branch -d dev 删除已合并的分支。删除分支就是删除指针
+git branch -D devGit友情提醒，dev分支还没有被合并，如果删除，将丢失掉修改，如果要强行删除，需要使用git branch -D dev命令
+git rebase master变基。在当前分支(非master)下执行该命令，则相当于把当前分支和mater分支合并，和merge操作类似，但提交历史不同，rebase操作的log更干净。具体可参考Git 分支 - 变基
+解决冲突
+假设在master分支和feature1分支对同一文件做了修改
+
+git merge feature1 在master分支上执行该命令，与feature1分支合并。这种情况下，Git无法执行“快速合并”，只能试图把各自的修改合并起来，但这种合并就可能会有冲突，果然冲突了！Git告诉我们，readme.txt文件存在冲突，必须手动解决冲突后再提交。git status也可以告诉我们冲突的文件
+合并分支时，如果可能，Git会用Fast forward模式，但这种模式下，删除分支后，会丢掉分支信息。如果要强制禁用Fast forward模式，Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息
+
+git merge --no-ff -m "merge with with no-ff" dev准备合并dev分支，注意--no-ff参数表示禁用Fast forward，因为本次合并要创建一个新的commit，所以加上-m参数，把commit描述写进去
+bug分支
+Git还提供了一个stash功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作
+
+git stash保存工作现场
+git stash list 查看工作现场
+git stash apply 恢复工作现场，但是恢复后，stash内容并不删除，有多个工作现场时可以git stash apply stash@{0}恢复特定的现场
+git stash drop删除stash的内容
+git stash pop恢复的同时也把stas内容删除了
+远程分支
+这部分只介绍常用的几个操作
+
+git fetch origin 这个命令查找 “origin” 是哪一个服务器，从中抓取本地没有的数据，并且更新本地数据库，移动 origin/master指针指向新的、更新后的位置
+git push (remote) (branch)推送本地的分支来更新远程仓库上的 同名分支。如前文提到的git push origin master就是将本地master分支推送到远程master分支；复杂一点的，git push origin serverfix:awesomebranch将本地的 serverfix分支推送到远程仓库上的awesomebranch分支
+git push origin --delete serverfix或者git push origin :remotebranch,删除远程的serverfix分支
+git pull在大多数情况下它的含义是一个git fetch紧接着一个git merge命令。具体可参考Git远程操作详解和Documentation git-pull
+
+============================
+
+git branch 查看本地所有分支
+
+git status 查看当前状态
+
+git commit 提交
+
+git branch -a 查看所有的分支
+
+git branch -r 查看远程所有分支
+
+git commit -am "init" 提交并且加注释
+
+git remote add origin git@192.168.1.119:ndshow
+
+git push origin master 将文件给推到服务器上
+
+git remote show origin 显示远程库origin里的资源
+
+git push origin master:develop
+
+git push origin master:hb-dev 将本地库与服务器上的库进行关联
+
+git checkout --track origin/dev 切换到远程dev分支
+
+git branch -D master develop 删除本地库develop
+
+git checkout -b dev 建立一个新的本地分支dev
+
+git merge origin/dev 将分支dev与当前分支进行合并
+
+git checkout dev 切换到本地dev分支
+
+git remote show 查看远程库
+
+git add .
+
+git rm 文件名(包括路径) 从git中删除指定文件
+
+git clone git://github.com/schacon/grit.git 从服务器上将代码给拉下来
+
+git config --list 看所有用户
+
+git ls-files 看已经被提交的
+
+git rm [file name] 删除一个文件
+
+git commit -a 提交当前repos的所有的改变
+
+git add [file name] 添加一个文件到git index
+
+git commit -v 当你用－v参数的时候可以看commit的差异
+
+git commit -m "This is the message describing the commit" 添加commit信息
+
+git commit -a -a是代表add，把所有的change加到git index里然后再commit
+
+git commit -a -v 一般提交命令
+
+git log 看你commit的日志
+
+git diff 查看尚未暂存的更新
+
+git rm a.a 移除文件(从暂存区和工作区中删除)
+
+git rm --cached a.a 移除文件(只从暂存区中删除)
+
+git commit -m "remove" 移除文件(从Git中删除)
+
+git rm -f a.a 强行移除修改后文件(从暂存区和工作区中删除)
+
+git diff --cached 或 $ git diff --staged 查看尚未提交的更新
+
+git stash push 将文件给push到一个临时空间中
+
+git stash pop 将文件从临时空间pop下来
+
+---------------------------------------------------------
+
+git remote add origin git@github.com:username/Hello-World.git
+
+git push origin master 将本地项目给提交到服务器中
+
+-----------------------------------------------------------
+
+git pull 本地与服务器端同步
+
+-----------------------------------------------------------------
+
+git push (远程仓库名) (分支名) 将本地分支推送到服务器上去。
+
+git push origin serverfix:awesomebranch
+
+------------------------------------------------------------------
+
+git fetch 相当于是从远程获取最新版本到本地，不会自动merge
+
+git commit -a -m "log_message" (-a是提交所有改动，-m是加入log信息) 本地修改同步至服务器端 ：
+
+git branch branch_0.1 master 从主分支master创建branch_0.1分支
+
+git branch -m branch_0.1 branch_1.0 将branch_0.1重命名为branch_1.0
+
+git checkout branch_1.0/master 切换到branch_1.0/master分支
+
+du -hs
+
+git branch 删除远程branch
+
+git push origin :branch_remote_name
+
+git branch -r -d branch_remote_name
+
+-----------------------------------------------------------
+
+初始化版本库，并提交到远程服务器端
+
+mkdir WebApp
+
+cd WebApp
+
+git init 本地初始化
+
+touch README
+
+git add README 添加文件
+
+git commit -m 'first commit'
+
+git remote add origin git@github.com:daixu/WebApp.git
+
+增加一个远程服务器端
+
+上面的命令会增加URL地址为'git@github.com:daixu/WebApp.git'，名称为origin的远程服务器库，以后提交代码的时候只需要使用 origin别名即可
+
+二、 Git 命令速查表
+
+1、常用的Git命令
+
+命令简要说明
+
+git add添加至暂存区
+
+git add–interactive交互式添加
+
+git apply应用补丁
+
+git am应用邮件格式补丁
+
+git annotate同义词，等同于 git blame
+
+git archive文件归档打包
+
+git bisect二分查找
+
+git blame文件逐行追溯
+
+git branch分支管理
+
+git cat-file版本库对象研究工具
+
+git checkout检出到工作区、切换或创建分支
+
+git cherry-pick提交拣选
+
+git citool图形化提交，相当于 git gui 命令
+
+git clean清除工作区未跟踪文件
+
+git clone克隆版本库
+
+git commit提交
+
+git config查询和修改配置
+
+git describe通过里程碑直观地显示提交ID
+
+git diff差异比较
+
+git difftool调用图形化差异比较工具
+
+git fetch获取远程版本库的提交
+
+git format-patch创建邮件格式的补丁文件。参见 git am 命令
+
+git grep文件内容搜索定位工具
+
+git gui基于Tcl/Tk的图形化工具，侧重提交等操作
+
+git help帮助
+
+git init版本库初始化
+
+git init-db*同义词，等同于 git init
+
+git log显示提交日志
+
+git merge分支合并
+
+git mergetool图形化冲突解决
+
+git mv重命名
+
+git pull拉回远程版本库的提交
+
+git push推送至远程版本库
+
+git rebase分支变基
+
+git rebase–interactive交互式分支变基
+
+git reflog分支等引用变更记录管理
+
+git remote远程版本库管理
+
+git repo-config*同义词，等同于 git config
+
+git reset重置改变分支“游标”指向
+
+git rev-parse将各种引用表示法转换为哈希值等
+
+git revert反转提交
+
+git rm删除文件
+
+git show显示各种类型的对象
+
+git stage*同义词，等同于 git add
+
+git stash保存和恢复进度
+
+git status显示工作区文件状态
+
+git tag里程碑管理
+
+2、对象库操作相关命令
+
+命令简要说明
+
+git commit-tree从树对象创建提交
+
+git hash-object从标准输入或文件计算哈希值或创建对象
+
+git ls-files显示工作区和暂存区文件
+
+git ls-tree显示树对象包含的文件
+
+git mktag读取标准输入创建一个里程碑对象
+
+git mktree读取标准输入创建一个树对象
+
+git read-tree读取树对象到暂存区
+
+git update-index工作区内容注册到暂存区及暂存区管理
+
+git unpack-file创建临时文件包含指定 blob 的内容
+
+git write-tree从暂存区创建一个树对象
+
+3、引用操作相关命令
+
+命令简要说明
+
+git check-ref-format检查引用名称是否符合规范
+
+git for-each-ref引用迭代器，用于shell编程
+
+git ls-remote显示远程版本库的引用
+
+git name-rev将提交ID显示为友好名称
+
+git peek-remote*过时命令，请使用 git ls-remote
+
+git rev-list显示版本范围
+
+git show-branch显示分支列表及拓扑关系
+
+git show-ref显示本地引用
+
+git symbolic-ref显示或者设置符号引用
+
+git update-ref更新引用的指向
+
+git verify-tag校验 GPG 签名的Tag
+
+4、版本库管理相关命令
+
+命令简要说明
+
+git count-objects显示松散对象的数量和磁盘占用
+
+git filter-branch版本库重构
+
+git fsck对象库完整性检查
+
+git fsck-objects*同义词，等同于 git fsck
+
+git gc版本库存储优化
+
+git index-pack从打包文件创建对应的索引文件
+
+git lost-found*过时，请使用 git fsck –lost-found 命令
+
+git pack-objects从标准输入读入对象ID，打包到文件
+
+git pack-redundant查找多余的 pack 文件
+
+git pack-refs将引用打包到 .git/packed-refs 文件中
+
+git prune从对象库删除过期对象
+
+git prune-packed将已经打包的松散对象删除
+
+git relink为本地版本库中相同的对象建立硬连接
+
+git repack将版本库未打包的松散对象打包
+
+git show-index读取包的索引文件，显示打包文件中的内容
+
+git unpack-objects从打包文件释放文件
+
+git verify-pack校验对象库打包文件
+
+5、数据传输相关命令
+
+命令简要说明
+
+git fetch-pack执行 git fetch 或 git pull 命令时在本地执行此命令，用于从其他版本库获取缺失的对象
+
+git receive-pack执行 git push 命令时在远程执行的命令，用于接受推送的数据
+
+git send-pack执行 git push 命令时在本地执行的命令，用于向其他版本库推送数据
+
+git upload-archive执行 git archive –remote 命令基于远程版本库创建归档时，远程版本库执行此命令传送归档
+
+git upload-pack执行 git fetch 或 git pull 命令时在远程执行此命令，将对象打包、上传
+
+6、邮件相关命令
+
+命令简要说明
+
+git imap-send将补丁通过 IMAP 发送
+
+git mailinfo从邮件导出提交说明和补丁
+
+git mailsplit将 mbox 或 Maildir 格式邮箱中邮件逐一提取为文件
+
+git request-pull创建包含提交间差异和执行PULL操作地址的信息
+
+git send-email发送邮件
+
+7、协议相关命令
+
+命令简要说明
+
+git daemon实现Git协议
+
+git http-backend实现HTTP协议的CGI程序，支持智能HTTP协议
+
+git instaweb即时启动浏览器通过 gitweb 浏览当前版本库
+
+git shell受限制的shell，提供仅执行Git命令的SSH访问
+
+git update-server-info更新哑协议需要的辅助文件
+
+git http-fetch通过HTTP协议获取版本库
+
+git http-push通过HTTP/DAV协议推送
+
+git remote-ext由Git命令调用，通过外部命令提供扩展协议支持
+
+git remote-fd由Git命令调用，使用文件描述符作为协议接口
+
+git remote-ftp由Git命令调用，提供对FTP协议的支持
+
+git remote-ftps由Git命令调用，提供对FTPS协议的支持
+
+git remote-http由Git命令调用，提供对HTTP协议的支持
+
+git remote-https由Git命令调用，提供对HTTPS协议的支持
+
+git remote-testgit协议扩展示例脚本
+
+8、版本库转换和交互相关命令
+
+命令简要说明
+
+git archimport导入Arch版本库到Git
+
+git bundle提交打包和解包，以便在不同版本库间传递
+
+git cvsexportcommit将Git的一个提交作为一个CVS检出
+
+git cvsimport导入CVS版本库到Git。或者使用 cvs2git
+
+git cvsserverGit的CVS协议模拟器，可供CVS命令访问Git版本库
+
+git fast-export将提交导出为 git-fast-import 格式
+
+git fast-import其他版本库迁移至Git的通用工具
+
+git svnGit 作为前端操作 Subversion
+
+9、合并相关的辅助命令
+
+命令简要说明
+
+git merge-base供其他脚本调用，找到两个或多个提交最近的共同祖先
+
+git merge-file针对文件的两个不同版本执行三向文件合并
+
+git merge-index对index中的冲突文件调用指定的冲突解决工具
+
+git merge-octopus合并两个以上分支。参见 git merge 的octopus合并策略
+
+git merge-one-file由 git merge-index 调用的标准辅助程序
+
+git merge-ours合并使用本地版本，抛弃他人版本。参见 git merge 的ours合并策略
+
+git merge-recursive针对两个分支的三向合并。参见 git merge 的recursive合并策略
+
+git merge-resolve针对两个分支的三向合并。参见 git merge 的resolve合并策略
+
+git merge-subtree子树合并。参见 git merge 的 subtree 合并策略
+
+git merge-tree显式三向合并结果，不改变暂存区
+
+git fmt-merge-msg供执行合并操作的脚本调用，用于创建一个合并提交说明
+
+git rerere重用所记录的冲突解决方案
+
+10、 杂项
+
+命令简要说明
+
+git bisect–helper由 git bisect 命令调用，确认二分查找进度
+
+git check-attr显示某个文件是否设置了某个属性
+
+git checkout-index从暂存区拷贝文件至工作区
+
+git cherry查找没有合并到上游的提交
+
+git diff-files比较暂存区和工作区，相当于 git diff –raw
+
+git diff-index比较暂存区和版本库，相当于 git diff –cached –raw
+
+git diff-tree比较两个树对象，相当于 git diff –raw A B
+
+git difftool–helper由 git difftool 命令调用，默认要使用的差异比较工具
+
+git get-tar-commit-id从 git archive 创建的 tar 包中提取提交ID
+
+git gui–askpass命令 git gui 的获取用户口令输入界面
+
+git notes提交评论管理
+
+git patch-id补丁过滤行号和空白字符后生成补丁唯一ID
+
+git quiltimport将Quilt补丁列表应用到当前分支
+
+git replace提交替换
+
+git shortlog对 git log 的汇总输出，适合于产品发布说明
+
+git stripspace删除空行，供其他脚本调用
+
+git submodule子模组管理
+
+git tar-tree过时命令，请使用 git archive
+
+git var显示 Git 环境变量
+
+git web–browse启动浏览器以查看目录或文件
+
+git whatchanged显示提交历史及每次提交的改动
+
+git-mergetool–lib包含于其他脚本中，提供合并/差异比较工具的选择和执行
+
+git-parse-remote包含于其他脚本中，提供操作远程版本库的函数
+
+git-sh-setup包含于其他脚本中，提供 shell 编程的函数库
+
+下面脚本之家小编特为大家分享一个图片版的
+
+Git 常用命令速查表。点击查看大图。
+
+Git 常用命令速查表
+Git命令参考手册(文本版)
+
+git init                                                  # 初始化本地git仓库（创建新仓库）
+
+git config --global user.name "xxx"                       # 配置用户名
+
+git config --global user.email "xxx@xxx.com"              # 配置邮件
+
+git config --global color.ui true                         # git status等命令自动着色
+
+git config --global color.status auto
+
+git config --global color.diff auto
+
+git config --global color.branch auto
+
+git config --global color.interactive auto
+
+git clone git+ssh://git@192.168.53.168/VT.git             # clone远程仓库
+
+git status                                                # 查看当前版本状态（是否修改）
+
+git add xyz                                               # 添加xyz文件至index
+
+git add .                                                 # 增加当前子目录下所有更改过的文件至index
+
+git commit -m 'xxx'                                       # 提交
+
+git commit --amend -m 'xxx'                               # 合并上一次提交（用于反复修改）
+
+git commit -am 'xxx'                                      # 将add和commit合为一步
+
+git rm xxx                                                # 删除index中的文件
+
+git rm -r *                                               # 递归删除
+
+git log                                                   # 显示提交日志
+
+git log -1                                                # 显示1行日志 -n为n行
+
+git log -5
+
+git log --stat                                            # 显示提交日志及相关变动文件
+
+git log -p -m
+
+git show dfb02e6e4f2f7b573337763e5c0013802e392818         # 显示某个提交的详细内容
+
+git show dfb02                                            # 可只用commitid的前几位
+
+git show HEAD                                             # 显示HEAD提交日志
+
+git show HEAD^                                            # 显示HEAD的父（上一个版本）的提交日志 ^^为上两个版本 ^5为上5个版本
+
+git tag                                                   # 显示已存在的tag
+
+git tag -a v2.0 -m 'xxx'                                  # 增加v2.0的tag
+
+git show v2.0                                             # 显示v2.0的日志及详细内容
+
+git log v2.0                                              # 显示v2.0的日志
+
+git diff                                                  # 显示所有未添加至index的变更
+
+git diff --cached                                         # 显示所有已添加index但还未commit的变更
+
+git diff HEAD^                                            # 比较与上一个版本的差异
+
+git diff HEAD -- ./lib                                    # 比较与HEAD版本lib目录的差异
+
+git diff origin/master..master                            # 比较远程分支master上有本地分支master上没有的
+
+git diff origin/master..master --stat                     # 只显示差异的文件，不显示具体内容
+
+git remote add origin git+ssh://git@192.168.53.168/VT.git # 增加远程定义（用于push/pull/fetch）
+
+git branch                                                # 显示本地分支
+
+git branch --contains 50089                               # 显示包含提交50089的分支
+
+git branch -a                                             # 显示所有分支
+
+git branch -r                                             # 显示所有原创分支
+
+git branch --merged                                       # 显示所有已合并到当前分支的分支
+
+git branch --no-merged                                    # 显示所有未合并到当前分支的分支
+
+git branch -m master master_copy                          # 本地分支改名
+
+git checkout -b master_copy                               # 从当前分支创建新分支master_copy并检出
+
+git checkout -b master master_copy                        # 上面的完整版
+
+git checkout features/performance                         # 检出已存在的features/performance分支
+
+git checkout --track hotfixes/BJVEP933                    # 检出远程分支hotfixes/BJVEP933并创建本地跟踪分支
+
+git checkout v2.0                                         # 检出版本v2.0
+
+git checkout -b devel origin/develop                      # 从远程分支develop创建新本地分支devel并检出
+
+git checkout -- README                                    # 检出head版本的README文件（可用于修改错误回退）
+
+git merge origin/master                                   # 合并远程master分支至当前分支
+
+git cherry-pick ff44785404a8e                             # 合并提交ff44785404a8e的修改
+
+git push origin master                                    # 将当前分支push到远程master分支
+
+git push origin :hotfixes/BJVEP933                        # 删除远程仓库的hotfixes/BJVEP933分支
+
+git push --tags                                           # 把所有tag推送到远程仓库
+
+git fetch                                                 # 获取所有远程分支（不更新本地分支，另需merge）
+
+git fetch --prune                                         # 获取所有原创分支并清除服务器上已删掉的分支
+
+git pull origin master                                    # 获取远程分支master并merge到当前分支
+
+git mv README README2                                     # 重命名文件README为README2
+
+git reset --hard HEAD                                     # 将当前版本重置为HEAD（通常用于merge失败回退）
+
+git rebase
+
+git branch -d hotfixes/BJVEP933                           # 删除分支hotfixes/BJVEP933（本分支修改已合并到其他分支）
+
+git branch -D hotfixes/BJVEP933                           # 强制删除分支hotfixes/BJVEP933
+
+git ls-files                                              # 列出git index包含的文件
+
+git show-branch                                           # 图示当前分支历史
+
+git show-branch --all                                     # 图示所有分支历史
+
+git whatchanged                                           # 显示提交历史对应的文件修改
+
+git revert dfb02e6e4f2f7b573337763e5c0013802e392818       # 撤销提交dfb02e6e4f2f7b573337763e5c0013802e392818
+
+git ls-tree HEAD                                          # 内部命令：显示某个git对象
+
+git rev-parse v2.0                                        # 内部命令：显示某个ref对于的SHA1 HASH
+
+git reflog                                                # 显示所有提交，包括孤立节点
+
+git show HEAD@{5}
+
+git show master@{yesterday}                               # 显示master分支昨天的状态
+
+git log --pretty=format:'%h %s' --graph                   # 图示提交日志
+
+git show HEAD~3
+
+git show -s --pretty=raw 2be7fcb476
+
+git stash                                                 # 暂存当前修改，将所有至为HEAD状态
+
+git stash list                                            # 查看所有暂存
+
+git stash show -p stash@{0}                               # 参考第一次暂存
+
+git stash apply stash@{0}                                 # 应用第一次暂存
+
+git grep "delete from"                                    # 文件中搜索文本“delete from”
+
+git grep -e '#define' --and -e SORT_DIRENT
+
+git gc
+
+git fsck
+
+Git是一个很强大的分布式版本控制系统。它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。
+
+Git常用操作命令：
+
+1) 远程仓库相关命令
+
+检出仓库：$ git clone git://github.com/jquery/jquery.git
+
+查看远程仓库：$ git remote -v
+
+添加远程仓库：$ git remote add [name] [url]
+
+删除远程仓库：$ git remote rm [name]
+
+修改远程仓库：$ git remote set-url --push [name] [newUrl]
+
+拉取远程仓库：$ git pull [remoteName] [localBranchName]
+
+推送远程仓库：$ git push [remoteName] [localBranchName]
+
+
+
+*如果想把本地的某个分支test提交到远程仓库，并作为远程仓库的master分支，或者作为另外一个名叫test的分支，如下：
+
+$git push origin test:master         // 提交本地test分支作为远程的master分支
+
+$git push origin test:test              // 提交本地test分支作为远程的test分支
+
+
+
+2）分支(branch)操作相关命令
+
+查看本地分支：$ git branch
+
+查看远程分支：$ git branch -r
+
+创建本地分支：$ git branch [name] ----注意新分支创建后不会自动切换为当前分支
+
+切换分支：$ git checkout [name]
+
+创建新分支并立即切换到新分支：$ git checkout -b [name]
+
+删除分支：$ git branch -d [name] ---- -d选项只能删除已经参与了合并的分支，对于未有合并的分支是无法删除的。如果想强制删除一个分支，可以使用-D选项
+
+合并分支：$ git merge [name] ----将名称为[name]的分支与当前分支合并
+
+创建远程分支(本地分支push到远程)：$ git push origin [name]
+
+删除远程分支：$ git push origin :heads/[name] 或 $ gitpush origin :[name] 
+
+
+
+*创建空的分支：(执行命令之前记得先提交你当前分支的修改，否则会被强制删干净没得后悔)
+
+$git symbolic-ref HEAD refs/heads/[name]
+
+$rm .git/index
+
+$git clean -fdx
+
+
+
+3）版本(tag)操作相关命令
+
+查看版本：$ git tag
+
+创建版本：$ git tag [name]
+
+删除版本：$ git tag -d [name]
+
+查看远程版本：$ git tag -r
+
+创建远程版本(本地版本push到远程)：$ git push origin [name]
+
+删除远程版本：$ git push origin :refs/tags/[name]
+
+合并远程仓库的tag到本地：$ git pull origin --tags
+
+上传本地tag到远程仓库：$ git push origin --tags
+
+创建带注释的tag：$ git tag -a [name] -m 'yourMessage'
+
+
+
+4) 子模块(submodule)相关操作命令
+
+添加子模块：$ git submodule add [url] [path]
+
+   如：$git submodule add git://github.com/soberh/ui-libs.git src/main/webapp/ui-libs
+
+初始化子模块：$ git submodule init  ----只在首次检出仓库时运行一次就行
+
+更新子模块：$ git submodule update ----每次更新或切换分支后都需要运行一下
+
+删除子模块：（分4步走哦）
+
+ 1) $ git rm --cached [path]
+
+ 2) 编辑“.gitmodules”文件，将子模块的相关配置节点删除掉
+
+ 3) 编辑“ .git/config”文件，将子模块的相关配置节点删除掉
+
+ 4) 手动删除子模块残留的目录
+
+
+
+5）忽略一些文件、文件夹不提交
+
+在仓库根目录下创建名称为“.gitignore”的文件，写入不需要的文件夹名或文件，每个元素占一行即可，如
+
+target
+
+bin
+
+*.db
+
+
+
+=====================
+
+Git 常用命令
+
+git branch 查看本地所有分支
+
+git status 查看当前状态
+
+git commit 提交
+
+git branch -a 查看所有的分支
+
+git branch -r 查看本地所有分支
+
+git commit -am "init" 提交并且加注释
+
+git remote add origin git@192.168.1.119:ndshow
+
+git push origin master 将文件给推到服务器上
+
+git remote show origin 显示远程库origin里的资源
+
+git push origin master:develop
+
+git push origin master:hb-dev 将本地库与服务器上的库进行关联
+
+git checkout --track origin/dev 切换到远程dev分支
+
+git branch -D master develop 删除本地库develop
+
+git checkout -b dev 建立一个新的本地分支dev
+
+git merge origin/dev 将分支dev与当前分支进行合并
+
+git checkout dev 切换到本地dev分支
+
+git remote show 查看远程库
+
+git add .
+
+git rm 文件名(包括路径) 从git中删除指定文件
+
+git clone git://github.com/schacon/grit.git 从服务器上将代码给拉下来
+
+git config --list 看所有用户
+
+git ls-files 看已经被提交的
+
+git rm [file name] 删除一个文件
+
+git commit -a 提交当前repos的所有的改变
+
+git add [file name] 添加一个文件到git index
+
+git commit -v 当你用－v参数的时候可以看commit的差异
+
+git commit -m "This is the message describing the commit" 添加commit信息
+
+git commit -a -a是代表add，把所有的change加到git index里然后再commit
+
+git commit -a -v 一般提交命令
+
+git log 看你commit的日志
+
+git diff 查看尚未暂存的更新
+
+git rm a.a 移除文件(从暂存区和工作区中删除)
+
+git rm --cached a.a 移除文件(只从暂存区中删除)
+
+git commit -m "remove" 移除文件(从Git中删除)
+
+git rm -f a.a 强行移除修改后文件(从暂存区和工作区中删除)
+
+git diff --cached 或 $ git diff --staged 查看尚未提交的更新
+
+git stash push 将文件给push到一个临时空间中
+
+git stash pop 将文件从临时空间pop下来
+
+---------------------------------------------------------
+
+git remote add origin git@github.com:username/Hello-World.git
+
+git push origin master 将本地项目给提交到服务器中
+
+-----------------------------------------------------------
+
+git pull 本地与服务器端同步
+
+-----------------------------------------------------------------
+
+git push (远程仓库名) (分支名) 将本地分支推送到服务器上去。
+
+git push origin serverfix:awesomebranch
+
+------------------------------------------------------------------
+
+git fetch 相当于是从远程获取最新版本到本地，不会自动merge
+
+git commit -a -m "log_message" (-a是提交所有改动，-m是加入log信息) 本地修改同步至服务器端 ：
+
+git branch branch_0.1 master 从主分支master创建branch_0.1分支
+
+git branch -m branch_0.1 branch_1.0 将branch_0.1重命名为branch_1.0
+
+git checkout branch_1.0/master 切换到branch_1.0/master分支
+
+du -hs
+
+-----------------------------------------------------------
+
+mkdir WebApp
+
+cd WebApp
+
+git init
+
+touch README
+
+git add README
+
+git commit -m 'first commit'
+
+git remote add origin git@github.com:daixu/WebApp.git
+
+git push -u origin master
+
+Reference:
+https://www.jianshu.com/p/590c88295a8c
+​
